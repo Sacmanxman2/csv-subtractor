@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>CSV Subtractor</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="papaparse.min.js"></script>
+    <link rel="stylesheet" href="https://bootswatch.com/4/darkly/bootstrap.min.css" type="text/css" media="screen" charset="utf-8">
+  </head>
+  <body>
+    <div class="container mt-3">
+      <h1>CSV Subtractor</h1>
+      <div id="app">
+        <div class="row p-2">
+          <div class="col">File 1</div>
+          <div class="col-10"><input type="file" id="file1" @change="loadTextFromFile1"></div>
+        </div>
+        <div class="row p-2">
+          <div class="col">File 2</div>
+          <div class="col-10"><input type="file" id="file1" @change="loadTextFromFile1"></div>
+        </div>
+      </div>
+    </div>
+
+  <script src="Script.js"></script>
+  </body>
+</html>
