@@ -10,15 +10,21 @@
   <body>
     <div class="container mt-3">
       <h1>CSV Subtractor</h1>
+
       <div id="app">
         <div class="row p-2">
           <div class="col">File 1</div>
-          <div class="col-10"><input type="file" id="file1" @change="loadTextFromFile1"></div>
+          <div class="col-10"><input type="file" id="file1" @change="loadFile1"></div>
         </div>
         <div class="row p-2">
           <div class="col">File 2</div>
-          <div class="col-10"><input type="file" id="file1" @change="loadTextFromFile1"></div>
+          <div class="col-10"><input type="file" id="file2" @change="loadFile2"></div>
         </div>
+        <div class="row p-2">
+          <button @click="processData">Create Output</button>
+          <button @click="">Download CSV</button>
+        </div>
+        <p v-if="numOfDeletions!=0">Number of deletions: {{ numOfDeletions }}</p>
       </div>
     </div>
 
