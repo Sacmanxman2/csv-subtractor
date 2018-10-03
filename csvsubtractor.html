@@ -24,6 +24,9 @@
           <button @click="processData">Create Output</button>
           <button @click="">Download CSV</button>
         </div>
+        <p v-if="processingStatus==1">Processing data...</p>
+        <p v-if="processingStatus==2">Done processing data.</p>
+        <p v-if="numScanned!=0">Number of scanned cells: {{ numScanned }}</p>
         <p v-if="numOfDeletions!=0">Number of deletions: {{ numOfDeletions }}</p>
       </div>
     </div>
