@@ -1,7 +1,8 @@
 <template>
   <div id="app">
     <csv-uploader fileId="opFile" flabel="Operating File"></csv-uploader>
-    <csv-uploader fileId="rifFile" flabel="Reference File"></csv-uploader>
+    <csv-uploader fileId="refFile" flabel="Reference File"></csv-uploader>
+    <csv-uploader fileId="regxFile" flabel="Regex File"></csv-uploader>
     <column-choice></column-choice>
     <processing></processing>
   </div>

@@ -20,48 +20,25 @@ export default new Vuex.Store({
       state.columnChoice = 1
     },
 
-    fileUpload(state, f) {
-      console.log(f['fi'])
+    uploadSetter(state, f) {
+      var parsedFile = f['fi']
       switch(f['fId']){
           case 'opFile':
-            state.opFile = Papa.parse(f['fi'], {
-              skipEmptyLines: true,
-              complete: (results) => {
-                console.log(results['data'])
-              }
-            })
+            state.opFile = parsedFile
             break
           case 'refFile':
-            state.refFile = Papa.parse(f['fi'], {
-              skipEmptyLines: true,
-              complete: (results) => {
-                console.log(results['data'])
-              }
-            })
+            state.refFile = parsedFile
             break
           case 'regxFile':
-            state.regxFile = Papa.parse(f['fi'], {
-              skipEmptyLines: true,
-              complete: (results) => {
-                console.log(results['data'])
-              }
-            })
+            state.regxFile = parsedFile
             break
       }
     },
 
-    setProcessingStatus(state, v) {
-      state.processingStatus = v
-    },
-
-    columnError(state) {
-      state.columnError = 1
-    },
-    columnGood(state) {
-      state.columnError = 0
-    },
-    columnSet(state, v) {
-      state.columnChoice = v
-    }
-  }
+    setProcessingStatus: (state, v) => state.processingStatus = v,
+    columnError: state => state.columnError = 1,
+    columnGood: state => state.columnError = 0,
+    columnSet: (state, v) => state.columnChoice = v
+  },
+  strict: true
 })

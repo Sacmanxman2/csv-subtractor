@@ -11,14 +11,9 @@ import { mapState } from 'vuex'
 export default {
   name: 'ColumnChoice',
   computed: {
-    columnChoice: {
-      get() {
-        return this.$store.state.columnChoice
-      },
-      set( value ) {
-        this.$store.commit('columnSet', value)
-      }
-    }
+    ...mapState([
+      'columnChoice'
+    ])
   },
   methods: {
     verifyColumn(e) {

@@ -46,6 +46,23 @@ export default {
       }
     },
 
+    regexFilter(searchTerm, data) {
+      if (typeof(searchTerm) !== 'undefined') {
+        for (var a in data) {
+          for (var b in data[a]) {
+            if (typeof(data[a][b]) !== 'undefined') {
+              let entryU = data[a][b].toUpperCase().replace(/\s/g, '')
+              let searchTermU = searchTerm.toUpperCase().replace(/\s/g, '')
+              if (entryU.includes(searchTermU)) {
+                this.outputFileContents[a][b] = ''
+                this.$data.numOfDeletions++
+              }
+            }
+          }
+        }
+      }
+    },
+
     processData(ev) {
       if (this.columnError == 1) {
         console.log("Not running due to column error")
@@ -57,7 +74,12 @@ export default {
             console.log("Running on row " + c)
             //console.log(this.columnChoice - 1)
             //console.log(this.file2Contents[c][this.columnChoice - 1])
-            this.searchAndDestroy(this.file2Contents[c][this.columnChoice - 1], this.file1Contents);
+            if (this.refFileSearch == true) {
+              this.searchAndDestroy(this.file2Contents[c][this.columnChoice - 1], this.file1Contents)
+            }
+            if (this.regxFileSearch == true) {
+              this.regxFileSearch(this.file2Contents[c][this.columnChoice -1], this.file1Contents)
+            }
           }
           this.processingStatus = 2
         }, 1500)

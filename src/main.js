@@ -4,16 +4,17 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import 'es6-promise/auto'
 import App from './App'
-import store from './store/index.js'
 
 Vue.config.productionTip = false
 
 Vue.use(Vuex)
 
+import store from './store/index.js'
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
-  store: store,
+  store,
   components: { App },
   template: '<App/>'
 })
