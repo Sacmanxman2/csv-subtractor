@@ -4,7 +4,8 @@
       <button @click="processData" class="m-1">Create Output</button>
       <button @click="downloadCSV" class="m-1">Download CSV</button>
     </div>
-    <p v-if="columnError===1">Please enter a number in the column field and try again</p>
+    <p v-if="refColumnError===1">Please enter a number in the exact match column field and try again</p>
+    <p v-if="regxColumnError===1">Please enter a number in the regex column field and try again</p>
     <p v-if="processingStatus===1">Processing data, please wait...</p>
     <p v-if="processingStatus===2">Done processing data! Press "Download CSV" to download the modified CSV File.</p>
     <p v-if="numOfDeletions!=0">Number of deletions: {{ numOfDeletions }}</p>
@@ -18,77 +19,131 @@ import Papa from 'papaparse'
 
 export default {
   name: 'Processing',
+  data () {
+    return {
+      delCountTotal: 0
+    }
+  },
   computed: {
     ...mapState([
-      'columnError',
+      'opFile',
+      'refFile',
+      'regxFile',
+      'outFile',
+      'refColumnChoice',
+      'refColumnError',
+      'refFileSearch',
+      'regxColumnChoice',
+      'regxColumnError',
+      'regxFileSearch',
       'numOfDeletions',
       'processingStatus'
     ])
   },
+
   methods: {
     searchAndDestroy (searchTerm, data) {
-      console.log('searchAndDestroy Started')
+      var delCount = 0
       if (typeof searchTerm !== 'undefined') {
         for (var a in data) {
-          var delCount = 0
           for (var b in data[a]) {
             if (typeof data[a][b] !== 'undefined') {
               if (data[a][b].toUpperCase().replace(/\s/g, '') === searchTerm.toUpperCase().replace(/\s/g, '')) {
                 console.info('FOUND A MATCH for ' + searchTerm + ' at ' + a + ',' + b)
-                this.outputFileContents[a][b] = ''
-                delCount += 1
+                data[a][b] = ''
+                delCount++
               }
             } else {
               console.log('data[' + a + '][' + b + '] is undefined')
             }
           }
-          this.$store.commit('deleteIncrement', delCount)
         }
       } else {
         console.log(searchTerm + ' is undefined, ignoring')
       }
+      return { data, delCount }
     },
 
-    regexFilter (searchTerm, data) {
+    regxFilter (searchTerm, data) {
+      var delCount = 0
       if (typeof searchTerm !== 'undefined') {
         for (var a in data) {
           for (var b in data[a]) {
             if (typeof data[a][b] !== 'undefined') {
               let entryU = data[a][b].toUpperCase().replace(/\s/g, '')
               let searchTermU = searchTerm.toUpperCase().replace(/\s/g, '')
+              // console.log('testing ' + entryU + 'against' + searchTermU)
               if (entryU.includes(searchTermU)) {
-                this.outputFileContents[a][b] = ''
-                this.$data.numOfDeletions++
+                data[a][b] = ''
+                console.info('FOUND A MATCH for ' + searchTerm + ' at ' + a + ',' + b)
+                delCount++
               }
             }
           }
         }
       }
+      return { data, delCount }
     },
 
     processData (ev) {
-      if (this.columnError === 1) {
+      if (this.refColumnError === 1 || this.regxColumnError === 1) {
         console.log('Not running due to column error')
+      } else if (this.opFile.length < 1) {
+        console.log('Not running - no operating file')
       } else {
-        this.outputFileContents = this.file1Contents
+        this.$store.commit('resetPreProcess')
+        this.$store.commit('setProcessingStatus', 1)
+
         setTimeout(() => {
-          for (var c in this.file2Contents) {
-            console.log('Running on row ' + c)
-            console.log(this.columnChoice - 1)
-            console.log(this.file2Contents[c][this.columnChoice - 1])
-            if (this.refFileSearch === true) {
-              this.searchAndDestroy(this.file2Contents[c][this.columnChoice - 1], this.file1Contents)
-            }
-            if (this.regxFileSearch === true) {
-              this.regxFileSearch(this.file2Contents[c][this.columnChoice - 1], this.file1Contents)
+          var tempOut = []
+          for (var tO in this.opFile) {
+            tempOut[tO] = []
+            for (var tP in this.opFile[tO]) {
+              tempOut[tO][tP] = this.opFile[tO][tP]
             }
           }
-        }, 1500)
+
+          console.log('tempOut: ')
+          console.log(tempOut)
+          var columnToUse
+          var tempObj
+
+          // create temporary output file
+
+          this.delCountTotal = 0
+          if (this.refFileSearch) {
+            columnToUse = this.refColumnChoice - 1
+            console.log('Processing by reference file')
+            // cycle through entries in reference file
+            for (var refRow in this.refFile) {
+              tempObj = this.searchAndDestroy(this.refFile[refRow][columnToUse], tempOut)
+              tempOut = tempObj['data']
+              this.delCountTotal += tempObj['delCount']
+            }
+          }
+          this.$store.commit('deleteIncrease', this.delCountTotal)
+
+          this.delCountTotal = 0
+          if (this.regxFileSearch) {
+            columnToUse = this.regxColumnChoice - 1
+            console.log('Processing by regex file')
+            // cycle through rows in temp out file
+            for (var regxRow in this.regxFile) {
+              tempObj = this.regxFilter(this.regxFile[regxRow][columnToUse], tempOut)
+              tempOut = tempObj['data']
+              this.delCountTotal += tempObj['delCount']
+            }
+          }
+          this.$store.commit('deleteIncrease', this.delCountTotal)
+
+          this.$store.commit('applyOutFile', tempOut)
+          this.$store.commit('setProcessingStatus', 2)
+        }, 100)
       }
     },
 
     downloadCSV (ev) {
-      download('Output.csv', Papa.unparse(this.outputFileContents))
+      download('Output.csv', Papa.unparse(this.outFile))
     }
   }
 }

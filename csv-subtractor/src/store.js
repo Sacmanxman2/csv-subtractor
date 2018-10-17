@@ -9,18 +9,34 @@ export default new Vuex.Store({
     refFile: [],
     regxFile: [],
     outFile: [],
-    columnChoice: 1,
     numOfDeletions: 0,
     processingStatus: 0,
-    columnError: 0
+    refColumnChoice: 1,
+    refColumnError: 0,
+    refFileSearch: false,
+    regxColumnChoice: 1,
+    regxColumnError: 0,
+    regxFileSearch: false
+  },
+  getters: {
+    opFile: state => { return [...state.opFile] },
+    refFile: state => { return [...state.refFile] },
+    regxFile: state => { return [...state.regxFile] },
+    outFile: state => { return [...state.outFile] }
   },
   mutations: {
     resetVars (state) {
       state.numOfDeletions = 0
       state.outFile = []
       state.processingStatus = 0
-      state.columnError = 0
-      state.columnChoice = 1
+      state.refColumnError = 0
+      state.regxColumnError = 0
+    },
+
+    resetPreProcess (state) {
+      state.numOfDeletions = 0
+      state.outFile = []
+      state.processingStatus = 0
     },
 
     uploadSetter (state, f) {
@@ -38,12 +54,20 @@ export default new Vuex.Store({
       }
     },
 
-    columnSet: (state, v) => { state.columnChoice = v },
-    deleteIncrement: (state) => { state.numOfDeletions++ },
+    applyOutFile (state, contents) {
+      state.outFile = [...contents]
+    },
+
     deleteIncrease: (state, v) => { state.numOfDeletions += v },
     setProcessingStatus: (state, v) => { state.processingStatus = v },
-    columnError: state => { state.columnError = 1 },
-    columnGood: state => { state.columnError = 0 }
+    refColumnSet: (state, v) => { state.refColumnChoice = v },
+    refColumnError: state => { state.refColumnError = 1 },
+    refColumnGood: state => { state.refColumnError = 0 },
+    refFileSearch: (state, v) => { state.refFileSearch = v },
+    regxColumnSet: (state, v) => { state.regxColumnChoice = v },
+    regxColumnError: state => { state.regxColumnError = 1 },
+    regxColumnGood: state => { state.regxColumnError = 0 },
+    regxFileSearch: (state, v) => { state.regxFileSearch = v }
   },
   actions: {
 
