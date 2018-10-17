@@ -12,14 +12,12 @@
 //console.log("Debugmode is on v7")
 console.log("v7 - progress on")
 
-import { mapState } from 'vuex'
-
 import CsvUploader from './components/CsvUploader.vue'
 import ColumnChoice from './components/ColumnChoice.vue'
 import Processing from './components/Processing.vue'
 
 export default {
-  name: 'app',
+  name: 'App',
   components: {
     CsvUploader,
     ColumnChoice,

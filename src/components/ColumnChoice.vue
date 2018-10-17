@@ -13,16 +13,18 @@ export default {
   computed: {
     ...mapState([
       'columnChoice'
-    ])
+    ]),
   },
   methods: {
     verifyColumn(e) {
       if (isNaN(e.target.value) || e.target.value < 1) {
         this.$store.commit('columnError')
         this.$store.commit('columnSet', e.target.value)
+        console.log(this.$store.state.columnChoice + "," + this.$store.state.columnError)
       } else {
         this.$store.commit('columnGood')
         this.$store.commit('columnSet', e.target.value)
+        console.log(this.$store.state.columnChoice + "," + this.$store.state.columnError)
       }
     },
   }
