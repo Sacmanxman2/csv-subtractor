@@ -16,7 +16,8 @@ export default new Vuex.Store({
     refFileSearch: false,
     regxColumnChoice: 1,
     regxColumnError: 0,
-    regxFileSearch: false
+    regxFileSearch: false,
+    statusMsg: ''
   },
   getters: {
     opFile: state => { return [...state.opFile] },
@@ -67,7 +68,9 @@ export default new Vuex.Store({
     regxColumnSet: (state, v) => { state.regxColumnChoice = v },
     regxColumnError: state => { state.regxColumnError = 1 },
     regxColumnGood: state => { state.regxColumnError = 0 },
-    regxFileSearch: (state, v) => { state.regxFileSearch = v }
+    regxFileSearch: (state, v) => { state.regxFileSearch = v },
+    resetStatus: state => { state.statusMsg = '' },
+    setStatus: (state, v) => { state.statusMsg = v }
   },
   actions: {
 

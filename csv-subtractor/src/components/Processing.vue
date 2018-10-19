@@ -2,7 +2,7 @@
   <div>
     <div class="row p-2">
       <button @click="processData" class="m-1">Create Output</button>
-      <button @click="downloadCSV" class="m-1">Download CSV</button>
+      <button @click="downloadCSV" v-if="processingStatus===2" class="m-1">Download CSV</button>
     </div>
     <p v-if="refColumnError===1">Please enter a number in the exact match column field and try again</p>
     <p v-if="regxColumnError===1">Please enter a number in the regex column field and try again</p>
@@ -88,13 +88,21 @@ export default {
     processData (ev) {
       if (this.refColumnError === 1 || this.regxColumnError === 1) {
         console.log('Not running due to column error')
+        this.$store.commit('setStatus', 'Not running due to column error')
       } else if (this.opFile.length < 1) {
         console.log('Not running - no operating file')
+        this.$store.commit('setStatus', 'Not running - no operating file')
+      } else if (!this.regxFileSearch && !this.refFileSearch) {
+        console.log('Nothing to process')
+        this.$store.commit('resetPreProcess')
+        this.$store.commit('setStatus', 'No processing done, nothing to process')
       } else {
         this.$store.commit('resetPreProcess')
         this.$store.commit('setProcessingStatus', 1)
+        this.$store.commit('resetStatus')
 
         setTimeout(() => {
+          // create temporary output file
           var tempOut = []
           for (var tO in this.opFile) {
             tempOut[tO] = []
@@ -102,13 +110,8 @@ export default {
               tempOut[tO][tP] = this.opFile[tO][tP]
             }
           }
-
-          console.log('tempOut: ')
-          console.log(tempOut)
           var columnToUse
           var tempObj
-
-          // create temporary output file
 
           this.delCountTotal = 0
           if (this.refFileSearch) {

@@ -90,6 +90,7 @@ export default {
         complete: (results) => {
           this.fileContents = results['data']
           this.fileUpload()
+          this.$store.commit('resetStatus')
         }
       })
     }
