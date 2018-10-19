@@ -14,7 +14,6 @@ import CsvUploader from './components/CsvUploader.vue'
 import Processing from './components/Processing.vue'
 import StatusDisplay from './components/StatusDisplay.vue'
 
-// console.log("Debugmode is on v7")
 console.log('v10 - progress on')
 
 export default {

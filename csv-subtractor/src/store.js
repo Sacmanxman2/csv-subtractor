@@ -19,12 +19,6 @@ export default new Vuex.Store({
     regxFileSearch: false,
     statusMsg: ''
   },
-  getters: {
-    opFile: state => { return [...state.opFile] },
-    refFile: state => { return [...state.refFile] },
-    regxFile: state => { return [...state.regxFile] },
-    outFile: state => { return [...state.outFile] }
-  },
   mutations: {
     resetVars (state) {
       state.numOfDeletions = 0

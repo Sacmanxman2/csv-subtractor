@@ -7,14 +7,14 @@
 </template>
 
 <script>
+// papaparse is the CSV parsing library
 import Papa from 'papaparse'
-// import { mapMutations } from 'vuex'
 
 export default {
   name: 'CsvUploader',
   props: {
-    fileId: String,
-    flabel: String
+    fileId: String, // tells it whether it's the opFile, the refFile, or the regFile
+    flabel: String // the label to show on the actual page
   },
   data: () => {
     return {
@@ -22,14 +22,16 @@ export default {
     }
   },
   computed: {
+    // gets the column choice variable based on which fileId this has
     columnChoice: function () {
       if (this.fileId === 'refFile') {
-        return this.$store.state.refColumnChoice
+        return this.$store.state.refColumnChoice // this.$store.state references the Vuex store state where these are all contained
       }
       if (this.fileId === 'regxFile') {
         return this.$store.state.regxColumnChoice
       }
     },
+    // Separate get and set commands, so the v-model syntax works. V-model is a type of two-way binding so the variable always shows what the value is, and if it's changed it sets the value accordingly:
     checked: {
       get () {
         if (this.fileId === 'refFile') {
@@ -42,6 +44,7 @@ export default {
       set (value) {
         if (this.fileId === 'refFile') {
           this.$store.commit('refFileSearch', value)
+          // this.$store.commit is used to set/change values in the store via mutations, which are listed in the store.js file.
         }
         if (this.fileId === 'regxFile') {
           this.$store.commit('regxFileSearch', value)
@@ -50,6 +53,7 @@ export default {
     }
   },
   methods: {
+    // Verifies that the column is indeed a number above 1
     verifyColumn (e) {
       if (this.fileId === 'refFile') {
         if (isNaN(e.target.value) || e.target.value < 1) {
@@ -71,6 +75,7 @@ export default {
       }
     },
 
+    // 'uploads' (not really) the local variable contents to the Vuex store state (which is all client-side, despite the name)
     fileUpload () {
       console.log(this.fileContents)
       var fil = {
@@ -81,6 +86,7 @@ export default {
       this.$store.commit('uploadSetter', fil)
     },
 
+    // parses the file into a local variable
     loadFile (ev) {
       if (this.fileId === 'opFile') {
         this.$store.commit('resetVars')
