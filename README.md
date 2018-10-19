@@ -19,10 +19,14 @@ This is built using vueJS and the vue CLI utility. It can be run as a dev server
 *public/* - Static files not impacted by the build procedure. Fonts, etc.
 
 *src/* - The actual source files for the project, here's where the work gets done.
-    *App.vue* - The container for all other components
-    *main.js* - The initial JS file that starts the Vue instance
-    *router.js* - The Vue Router file, for future expandability if other tools are to be added. Vue Router lets you route URLs to components.
-    *store.js* - The Vuex store, where most of the global-esque variables and functions to modify them are kept.
+
+- *App.vue* - The container for all other components
+
+- *main.js* - The initial JS file that starts the Vue instance
+
+- *router.js* - The Vue Router file, for future expandability if other tools -are to be added. Vue Router lets you route URLs to components.
+
+- *store.js* - The Vuex store, where most of the global-esque variables and functions to modify them are kept.
 
 *src/assets/extraFunctions.js* - a container for the "download" function and any future functions I want to keep separate.
 
