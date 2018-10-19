@@ -6,7 +6,7 @@
     </div>
     <p v-if="refColumnError===1">Please enter a number in the exact match column field and try again</p>
     <p v-if="regxColumnError===1">Please enter a number in the regex column field and try again</p>
-    <p v-if="processingStatus===1">Processing data, please wait...</p>
+    <p v-if="processingStatus===1">Processing data, please wait...<br>If you get a 'slow browser' message, please ignore it</p>
     <p v-if="processingStatus===2">Done processing data! Press "Download CSV" to download the modified CSV File.</p>
     <p v-if="numOfDeletions!=0">Number of deletions: {{ numOfDeletions }}</p>
   </div>
@@ -85,7 +85,14 @@ export default {
       return { data, delCount }
     },
 
-    processData (ev) {
+    errorCatch () {
+      this.$store.commit('resetPreProcess')
+      if (this.refFileSearch && this.refFile.length < 1) {
+        this.$store.commit('refFileSearch', false)
+      }
+      if (this.regxFileSearch && this.regxFile.length < 1) {
+        this.$store.commit('regxFileSearch', false)
+      }
       if (this.refColumnError === 1 || this.regxColumnError === 1) {
         console.log('Not running due to column error')
         this.$store.commit('setStatus', 'Not running due to column error')
@@ -94,10 +101,15 @@ export default {
         this.$store.commit('setStatus', 'Not running - no operating file')
       } else if (!this.regxFileSearch && !this.refFileSearch) {
         console.log('Nothing to process')
-        this.$store.commit('resetPreProcess')
-        this.$store.commit('setStatus', 'No processing done, nothing to process')
+        this.$store.commit('setStatus', 'Not running, nothing checked to process')
       } else {
-        this.$store.commit('resetPreProcess')
+        return true
+      }
+      return false
+    },
+
+    processData (ev) {
+      if (this.errorCatch()) {
         this.$store.commit('setProcessingStatus', 1)
         this.$store.commit('resetStatus')
 
