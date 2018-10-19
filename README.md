@@ -9,7 +9,7 @@ cd csv-subtractor
 npm install
 ```
 
-This is built using vueJS and the vue CLI utility. It can be run as a dev server using the `npm run serve` command and built using the 'npm run build' command.
+This is built using vueJS and the vue CLI utility. It can be run as a dev server using the `npm run serve` command and built using the `npm run build` command.
 
 ## File structure
 **dist/** - The output of 'npm run build', copy the files in here to the location served by the server once you have a working build.
